@@ -1,4 +1,4 @@
-package main
+package chatgpt
 
 import (
 	"context"
@@ -40,7 +40,7 @@ type ChatGPTResponse struct {
 	SystemFingerprint string `json:"system_fingerprint"`
 }
 
-func SummarizeTone(ctx context.Context) error {
+func SummarizeReview(ctx context.Context) error {
 	text := `Pro : Direct access from Airport to ATL downtown area.
 
 Con : Signage in downtown area are lacking in the platform to which street exits.
@@ -79,9 +79,6 @@ Got off at Peachtree and it was a maze without much signage, I end up walking ou
 		panic(err)
 	}
 
-	fmt.Println("++++++++=")
-	fmt.Println(res.Choices[0].Message.Content)
-	fmt.Println("++++++++=")
 	final, err := json.MarshalIndent(res.Choices[0].Message.Content, "", "  ")
 
 	if err != nil {
