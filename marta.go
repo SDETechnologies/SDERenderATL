@@ -1,12 +1,8 @@
 package main
 
+/*
 import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
-)
+
 
 type Train struct {
 	Destination    string `json:"DESTINATION"`
@@ -48,3 +44,4 @@ func GetTrains() ([]Train, error) {
 
 	return realTimeTrains, nil
 }
+*/
