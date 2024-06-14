@@ -53,9 +53,15 @@ func main() {
 			panic(err)
 		}
 
+		sum, err := db.GetSumOpinionsOfTopic(r.Context(), database)
+		if err != nil {
+			panic(err)
+		}
+
 		err = tmpl.Execute(w, map[string]any{
 			"OverallStats": overallStats,
 			"TopicCounts":  mentionTopicCounts,
+			"SumOpinions":  sum,
 		})
 
 		if err != nil {

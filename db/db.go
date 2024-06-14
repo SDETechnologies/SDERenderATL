@@ -232,3 +232,133 @@ FROM feedback;
 	}
 	return overallRating, nil
 }
+
+type OpinionsSummary struct {
+	SumDriverPositive          int
+	SumDriverMixed             int
+	SumDriverNegative          int
+	SumPurchasingPositive      int
+	SumPurchasingMixed         int
+	SumPurchasingNegative      int
+	SumHomelessPositive        int
+	SumHomelessMixed           int
+	SumHomelessNegative        int
+	SumAccessibilityPositive   int
+	SumAccessibilityMixed      int
+	SumAccessibilityNegative   int
+	SumSafetyPositive          int
+	SumSafetyMixed             int
+	SumSafetyNegative          int
+	SumCustomerServicePositive int
+	SumCustomerServiceMixed    int
+	SumCustomerServiceNegative int
+	SumTimePositive            int
+	SumTimeMixed               int
+	SumTimeNegative            int
+	SumSignagePositive         int
+	SumSignageMixed            int
+	SumSignageNegative         int
+	SumCleanlinessPositive     int
+	SumCleanlinessMixed        int
+	SumCleanlinessNegative     int
+}
+
+func GetSumOpinionsOfTopic(ctx context.Context, db *sql.DB) (OpinionsSummary, error) {
+	query := `SELECT
+    SUM(CASE WHEN OpinionOfDriver = 'Positive' THEN 1 ELSE 0 END) AS SumDriverPositive,
+    SUM(CASE WHEN OpinionOfDriver = 'Mixed' THEN 1 ELSE 0 END) AS SumDriverMixed,
+    SUM(CASE WHEN OpinionOfDriver = 'Negative' THEN 1 ELSE 0 END) AS SumDriverNegative,
+    
+    SUM(CASE WHEN OpinionOfPurchasing = 'Positive' THEN 1 ELSE 0 END) AS SumPurchasingPositive,
+    SUM(CASE WHEN OpinionOfPurchasing = 'Mixed' THEN 1 ELSE 0 END) AS SumPurchasingMixed,
+    SUM(CASE WHEN OpinionOfPurchasing = 'Negative' THEN 1 ELSE 0 END) AS SumPurchasingNegative,
+
+    SUM(CASE WHEN OpinionOfHomeless = 'Positive' THEN 1 ELSE 0 END) AS SumHomelessPositive,
+    SUM(CASE WHEN OpinionOfHomeless = 'Mixed' THEN 1 ELSE 0 END) AS SumHomelessMixed,
+    SUM(CASE WHEN OpinionOfHomeless = 'Negative' THEN 1 ELSE 0 END) AS SumHomelessNegative,
+
+    SUM(CASE WHEN OpinionOfAccessibility = 'Positive' THEN 1 ELSE 0 END) AS SumAccessibilityPositive,
+    SUM(CASE WHEN OpinionOfAccessibility = 'Mixed' THEN 1 ELSE 0 END) AS SumAccessibilityMixed,
+    SUM(CASE WHEN OpinionOfAccessibility = 'Negative' THEN 1 ELSE 0 END) AS SumAccessibilityNegative,
+
+    SUM(CASE WHEN OpinionOfSafety = 'Positive' THEN 1 ELSE 0 END) AS SumSafetyPositive,
+    SUM(CASE WHEN OpinionOfSafety = 'Mixed' THEN 1 ELSE 0 END) AS SumSafetyMixed,
+    SUM(CASE WHEN OpinionOfSafety = 'Negative' THEN 1 ELSE 0 END) AS SumSafetyNegative,
+
+    SUM(CASE WHEN OpinionOfCustomerService = 'Positive' THEN 1 ELSE 0 END) AS SumCustomerServicePositive,
+    SUM(CASE WHEN OpinionOfCustomerService = 'Mixed' THEN 1 ELSE 0 END) AS SumCustomerServiceMixed,
+    SUM(CASE WHEN OpinionOfCustomerService = 'Negative' THEN 1 ELSE 0 END) AS SumCustomerServiceNegative,
+
+    SUM(CASE WHEN OpinionOfTime = 'Positive' THEN 1 ELSE 0 END) AS SumTimePositive,
+    SUM(CASE WHEN OpinionOfTime = 'Mixed' THEN 1 ELSE 0 END) AS SumTimeMixed,
+    SUM(CASE WHEN OpinionOfTime = 'Negative' THEN 1 ELSE 0 END) AS SumTimeNegative,
+
+    SUM(CASE WHEN OpinionOfSignage = 'Positive' THEN 1 ELSE 0 END) AS SumSignagePositive,
+    SUM(CASE WHEN OpinionOfSignage = 'Mixed' THEN 1 ELSE 0 END) AS SumSignageMixed,
+    SUM(CASE WHEN OpinionOfSignage = 'Negative' THEN 1 ELSE 0 END) AS SumSignageNegative,
+
+    SUM(CASE WHEN OpinionOfCleanliness = 'Positive' THEN 1 ELSE 0 END) AS SumCleanlinessPositive,
+    SUM(CASE WHEN OpinionOfCleanliness = 'Mixed' THEN 1 ELSE 0 END) AS SumCleanlinessMixed,
+    SUM(CASE WHEN OpinionOfCleanliness = 'Negative' THEN 1 ELSE 0 END) AS SumCleanlinessNegative
+FROM
+    feedback;
+`
+	tx, err := db.Begin()
+	if err != nil {
+		return OpinionsSummary{}, fmt.Errorf("[DB] beginning transaction: %s", err)
+	}
+
+	stmt, err := tx.Prepare(query)
+
+	if err != nil {
+		return OpinionsSummary{}, fmt.Errorf("[DB] preparing statement: %s", err)
+	}
+
+	defer stmt.Close()
+
+	res, err := stmt.QueryContext(ctx)
+
+	if err != nil {
+		return OpinionsSummary{}, fmt.Errorf("[DB] executing statement: %s", err)
+	}
+
+	opinionsSummary := OpinionsSummary{}
+
+	for res.Next() {
+		err = res.Scan(
+			&opinionsSummary.SumDriverPositive,
+			&opinionsSummary.SumDriverMixed,
+			&opinionsSummary.SumDriverNegative,
+			&opinionsSummary.SumPurchasingPositive,
+			&opinionsSummary.SumPurchasingMixed,
+			&opinionsSummary.SumPurchasingNegative,
+			&opinionsSummary.SumHomelessPositive,
+			&opinionsSummary.SumHomelessMixed,
+			&opinionsSummary.SumHomelessNegative,
+			&opinionsSummary.SumAccessibilityPositive,
+			&opinionsSummary.SumAccessibilityMixed,
+			&opinionsSummary.SumAccessibilityNegative,
+			&opinionsSummary.SumSafetyPositive,
+			&opinionsSummary.SumSafetyMixed,
+			&opinionsSummary.SumSafetyNegative,
+			&opinionsSummary.SumCustomerServicePositive,
+			&opinionsSummary.SumCustomerServiceMixed,
+			&opinionsSummary.SumCustomerServiceNegative,
+			&opinionsSummary.SumTimePositive,
+			&opinionsSummary.SumTimeMixed,
+			&opinionsSummary.SumTimeNegative,
+			&opinionsSummary.SumSignagePositive,
+			&opinionsSummary.SumSignageMixed,
+			&opinionsSummary.SumSignageNegative,
+			&opinionsSummary.SumCleanlinessPositive,
+			&opinionsSummary.SumCleanlinessMixed,
+			&opinionsSummary.SumCleanlinessNegative,
+		)
+		if err != nil {
+			return OpinionsSummary{}, fmt.Errorf("[DB] scanning: %s", err)
+		}
+
+	}
+	return opinionsSummary, nil
+
+}

@@ -34,7 +34,7 @@
             <div class="card-heading">Topics Mentioned</div>
             <canvas id="pie-chart"></canvas>
         </div>
-        <div class="card">
+        <div class="rating-card">
             <div class="card-heading">Overall Rating</div>
             <div class="five-star-rating">{{- range $star := .OverallStats.Stars }}<img {{ if eq $star "Full"
                     }}src="static/star-filled.svg" {{else if eq $star "HalfFull" }} src="static/star-partial.svg" {{
@@ -86,24 +86,33 @@
             </div>
         </div>
     </div>
+    <div class="bottom-bar-chart">
+        <div class="card-heading">Opinions of Topics</div>
+        <canvas id="stacked-bar-chart"></canvas>
+    </div>
     </div>
 </body>
 <script>
 
-    const primaryBlue = "#0072CE"
-    const lightBlue = "#66AEE8"
-    const darkBlue = "#005BB5"
+const primaryBlue = "#0072CE";
+const lightBlue = "#66B2FF"; // brighter
+const darkBlue = "#004C99"; // brighter
 
-    const primaryGold = "#FDB813"
-    const lightGold = "#FFD966"
-    const darkGold = "#E6A700"
+const primaryGold = "#FDB813";
+const lightGold = "#FFDA66"; // brighter
+const darkGold = "#CC9E00"; // brighter
 
-    const primaryRed = "#E64345"
-    const lightRed = "#F48C8A"
-    const darkRed = "#B53030"
+const primaryRed = "#E64345";
+const lightRed = "#FF8888"; // brighter
+const darkRed = "#B20000"; // brighter
+
+const positive = "#00A651"; // green fitting the scheme
+const mixed = "#FFA500"; // orange fitting the scheme
+const negative = "#D32F2F"; // dark red fitting the scheme
+
+// Additional colors for Positive, Mixed, Negative reviews fitting the color scheme
 
     const mentionedTopicsPieChart = document.getElementById('pie-chart').getContext('2d');
-    console.log(mentionedTopicsPieChart)
     new Chart(mentionedTopicsPieChart, {
         type: 'doughnut',
         data: {
@@ -120,12 +129,97 @@
         maintainAspectRatio: false,
         plugins: {
             legend: {
+                labels: {
+                    font: {
+                        size: 14
+                    }
+                },
                 display: true,
                 position: 'top',
             },
         },
     }
     })
+
+    const stackedBarChart = document.getElementById('stacked-bar-chart').getContext('2d');
+    var opinionsChart = new Chart(stackedBarChart, {
+        type: 'bar',
+        data: {
+            labels: ['Drivers', 'Purchasing', 'Homeless', 'Accessibility', 'Safety', 'Customer Service', 'Time', 'Signage', 'Cleanliness'],
+            datasets: [
+                {
+                    label: "Positive",
+                    backgroundColor: positive,
+                    data: [
+                        {{.SumOpinions.SumDriverPositive}},
+                {{.SumOpinions.SumPurchasingPositive}},
+                        {{.SumOpinions.SumHomelessPositive}},
+    {{.SumOpinions.SumAccessibilityPositive}},
+    {{.SumOpinions.SumSafetyPositive}},
+    {{.SumOpinions.SumCustomerServicePositive}},
+    {{.SumOpinions.SumTimePositive}},
+    {{.SumOpinions.SumSignagePositive}},
+    {{.SumOpinions.SumCleanlinessPositive}}
+                    ]
+                },
+    {
+        label: "Mixed",
+        backgroundColor: mixed,
+        data: [
+                        {{.SumOpinions.SumDriverMixed}},
+                {{.SumOpinions.SumPurchasingPositive}},
+                        {{.SumOpinions.SumHomelessMixed}},
+    {{.SumOpinions.SumAccessibilityMixed}},
+    {{.SumOpinions.SumSafetyMixed}},
+    {{.SumOpinions.SumCustomerServiceMixed}},
+    {{.SumOpinions.SumTimeMixed}},
+    {{.SumOpinions.SumSignageMixed}},
+    {{.SumOpinions.SumCleanlinessMixed}}
+        ]
+    },
+    {
+        label: "Negative",
+            backgroundColor: negative,
+        data: [
+                        {{.SumOpinions.SumDriverNegative}},
+                {{.SumOpinions.SumPurchasingNegative}},
+                        {{.SumOpinions.SumHomelessNegative}},
+    {{.SumOpinions.SumAccessibilityNegative}},
+    {{.SumOpinions.SumSafetyNegative}},
+    {{.SumOpinions.SumCustomerServiceNegative}},
+    {{.SumOpinions.SumTimeNegative}},
+    {{.SumOpinions.SumSignageNegative}},
+    {{.SumOpinions.SumCleanlinessNegative}}
+
+        ]
+    }
+            ],
+
+    options: {
+
+        barValueSpacing: 20,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                }
+            }]
+        },
+
+        responsive: true,
+
+            scales: {
+            x: {
+                stacked: true,
+                    },
+            y: {
+                stacked: true,
+                    beginAtZero: true
+            }
+        }
+    }}
+    })
+
 </script>
 
 <style>
@@ -146,11 +240,11 @@
 
     body {
         font-family: "Inter", sans-serif;
-        padding: 1rem;
+        margin: 1rem;
     }
 
     .title-divider {
-        background-color: blue;
+        background-color: #0072CE;
         width: full;
         height: .2rem;
         border-radius: .5rem;
@@ -170,6 +264,26 @@
         flex-direction: row;
         padding: 2rem 0;
         gap: 1rem;
+    }
+
+    .rating-card {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
+        border-radius: .5rem;
+        background-color: #F8F0F8;
+        padding: 1rem;
+        width: 35rem;
+        min-height: 7rem;
+    }
+    .bottom-bar-chart {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
+        border-radius: .5rem;
+        background-color: #F8F0F8;
+        padding: 1rem;
+        min-height: 7rem;
     }
 
     .card {
@@ -227,7 +341,7 @@
 
     #pie-chart {
         height: 450px !important;
-        width: 700px !important;
+        width: 100% !important;
     }
 </style>
 
