@@ -61,8 +61,9 @@ func InsertReview(ctx context.Context, db *sql.DB, content string) (Review, erro
 }
 
 type Feedback struct {
-	Review          string
-	OverallOpinion  string `json:"overallOpinion"`
+	Review         string
+	OverallOpinion string `json:"overallOpinion"`
+
 	MentionsDrivers bool   `json:"mentionsDrivers"`
 	OpinionOfDriver string `json:"opinionOfDriver"`
 	DriversSummary  string `json:"driversSummary"`
