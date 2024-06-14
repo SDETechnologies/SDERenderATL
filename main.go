@@ -37,19 +37,27 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		overallStats, err := db.GetOverallRating(r.Context(), database)
-		if err != nil {
-			panic(err)
-		}
 		tmpl, err := template.ParseFiles("views/index.html")
 
 		if err != nil {
 			panic(err)
 		}
 
+		overallStats, err := db.GetOverallRating(r.Context(), database)
+		if err != nil {
+			panic(err)
+		}
+
+		mentionTopicCounts, err := db.GetNumberOfTopicsCount(r.Context(), database)
+		if err != nil {
+			panic(err)
+		}
+
 		err = tmpl.Execute(w, map[string]any{
 			"OverallStats": overallStats,
+			"TopicCounts":  mentionTopicCounts,
 		})
+
 		if err != nil {
 			panic(err)
 		}

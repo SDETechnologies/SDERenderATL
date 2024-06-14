@@ -174,3 +174,61 @@ func GetOverallRating(ctx context.Context, db *sql.DB) (OverallRating, error) {
 
 	return overallRating, nil
 }
+
+type MentionsTopicsCounts struct {
+	MentionsDriversCount         int
+	MentionsPurchasingCount      int
+	MentionsHomelessCount        int
+	MentionsAccessibilityCount   int
+	MentionsSafetyCount          int
+	MentionsCustomerServiceCount int
+	MentionsTimeCount            int
+	MentionsSignageCount         int
+	MentionsCleanlinessCount     int
+}
+
+func GetNumberOfTopicsCount(ctx context.Context, db *sql.DB) (MentionsTopicsCounts, error) {
+	sqlStmt := `
+	SELECT
+    SUM(CASE WHEN MentionsDrivers = 1 THEN 1 ELSE 0 END) AS MentionsDriversCount,
+    SUM(CASE WHEN MentionsPurchasing = 1 THEN 1 ELSE 0 END) AS MentionsPurchasingCount,
+    SUM(CASE WHEN MentionsHomeless = 1 THEN 1 ELSE 0 END) AS MentionsHomelessCount,
+    SUM(CASE WHEN MentionsAccessibility = 1 THEN 1 ELSE 0 END) AS MentionsAccessibilityCount,
+    SUM(CASE WHEN MentionsSafety = 1 THEN 1 ELSE 0 END) AS MentionsSafetyCount,
+    SUM(CASE WHEN MentionsCustomerService = 1 THEN 1 ELSE 0 END) AS MentionsCustomerServiceCount,
+    SUM(CASE WHEN MentionsTime = 1 THEN 1 ELSE 0 END) AS MentionsTimeCount,
+    SUM(CASE WHEN MentionsSignage = 1 THEN 1 ELSE 0 END) AS MentionsSignageCount,
+    SUM(CASE WHEN MentionsCleanliness = 1 THEN 1 ELSE 0 END) AS MentionsCleanlinessCount
+FROM feedback;
+	`
+	tx, err := db.Begin()
+	if err != nil {
+		return MentionsTopicsCounts{}, fmt.Errorf("[DB] beginning transaction: %s", err)
+	}
+
+	stmt, err := tx.Prepare(sqlStmt)
+
+	if err != nil {
+		return MentionsTopicsCounts{}, fmt.Errorf("[DB] preparing statement: %s", err)
+	}
+
+	defer stmt.Close()
+
+	res, err := stmt.QueryContext(ctx)
+
+	if err != nil {
+		return MentionsTopicsCounts{}, fmt.Errorf("[DB] executing statement: %s", err)
+	}
+
+	overallRating := MentionsTopicsCounts{}
+
+	for res.Next() {
+		err = res.Scan(&overallRating.MentionsDriversCount, &overallRating.MentionsPurchasingCount, &overallRating.MentionsHomelessCount, &overallRating.MentionsAccessibilityCount, &overallRating.MentionsSafetyCount, &overallRating.MentionsCustomerServiceCount, &overallRating.MentionsTimeCount, &overallRating.MentionsSignageCount, &overallRating.MentionsCleanlinessCount)
+
+		if err != nil {
+			return MentionsTopicsCounts{}, fmt.Errorf("[DB] scanning: %s", err)
+		}
+
+	}
+	return overallRating, nil
+}

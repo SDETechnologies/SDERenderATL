@@ -30,7 +30,10 @@
         </div>
     </div>
     <div class="middle-cards">
-        <div class="card" id="mentioned-topics-piechart"></div>
+        <div class="card">
+            <div class="card-heading">Topics Mentioned</div>
+            <canvas id="pie-chart"></canvas>
+        </div>
         <div class="card">
             <div class="card-heading">Overall Rating</div>
             <div class="five-star-rating">{{- range $star := .OverallStats.Stars }}<img {{ if eq $star "Full"
@@ -86,7 +89,43 @@
     </div>
 </body>
 <script>
-    console.log("asdf")
+
+    const primaryBlue = "#0072CE"
+    const lightBlue = "#66AEE8"
+    const darkBlue = "#005BB5"
+
+    const primaryGold = "#FDB813"
+    const lightGold = "#FFD966"
+    const darkGold = "#E6A700"
+
+    const primaryRed = "#E64345"
+    const lightRed = "#F48C8A"
+    const darkRed = "#B53030"
+
+    const mentionedTopicsPieChart = document.getElementById('pie-chart').getContext('2d');
+    console.log(mentionedTopicsPieChart)
+    new Chart(mentionedTopicsPieChart, {
+        type: 'doughnut',
+        data: {
+            labels: ['Drivers', 'Purchasing', 'Homeless', 'Accessibility', 'Saftey', 'Customer Service', 'Mentions', 'Signage', 'Cleanliness'],
+            datasets: [{
+                label: 'Mentioned Topics',
+                data: [{{.TopicCounts.MentionsDriversCount}}, {{.TopicCounts.MentionsPurchasingCount}}, {{.TopicCounts.MentionsHomelessCount}}, {{.TopicCounts.MentionsAccessibilityCount}}, {{.TopicCounts.MentionsSafetyCount}}, {{.TopicCounts.MentionsCustomerServiceCount}}, {{.TopicCounts.MentionsTimeCount}}, {{.TopicCounts.MentionsSignageCount}}, {{.TopicCounts.MentionsCleanlinessCount}} 
+            ],
+        backgroundColor: [primaryBlue, lightBlue, darkBlue, primaryGold, lightGold, darkGold, primaryRed, lightRed, darkRed],
+        hoverOffset: 4}]
+    },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+            },
+        },
+    }
+    })
 </script>
 
 <style>
@@ -136,7 +175,6 @@
     .card {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
         border-radius: .5rem;
         background-color: #F8F0F8;
@@ -185,6 +223,11 @@
         justify-items: start;
         font-size: 1.1rem;
         padding: .2rem .5rem
+    }
+
+    #pie-chart {
+        height: 450px !important;
+        width: 700px !important;
     }
 </style>
 
