@@ -26,38 +26,33 @@ func GetDb() (*sql.DB, error) {
 	return db, nil
 }
 
-func InsertReview(ctx context.Context, db *sql.DB, content string) (Review, error) {
-	sqlStmt := "insert into reviews (content) values (?)"
+func InsertReview(ctx context.Context, db *sql.DB, feedback Feedback) error {
+	sqlStmt := "INSERT INTO feedback(Review, OverallOpinion, MentionsDrivers, OpinionOfDriver, DriversSummary, MentionsPurchasing, OpinionOfPurchasing, PurchasingSummary, MentionsHomeless, OpinionOfHomeless, HomelessSummary, MentionsAccessibility, OpinionOfAccessibility, AccessibilitySummary, MentionsSafety, OpinionOfSafety, SafetySummary, MentionsCustomerService, OpinionOfCustomerService, CustomerServiceSummary, MentionsTime, OpinionOfTime, TimeSummary, MentionsSignage, OpinionOfSignage, SignageSummary, MentionsCleanliness, OpinionOfCleanliness, CleanlinessSummary) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 	tx, err := db.Begin()
 	if err != nil {
-		return Review{}, fmt.Errorf("[DB] beginning transaction: %s", err)
+		return fmt.Errorf("[DB] beginning transaction: %s", err)
 	}
 
 	stmt, err := tx.Prepare(sqlStmt)
 
 	if err != nil {
-		return Review{}, fmt.Errorf("[DB] preparing statement: %s", err)
+		return fmt.Errorf("[DB] preparing statement: %s", err)
 	}
 
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, content)
+	_, err = stmt.ExecContext(ctx, feedback.Review, feedback.OverallOpinion, feedback.MentionsDrivers, feedback.OpinionOfDriver, feedback.DriversSummary, feedback.MentionsPurchasing, feedback.OpinionOfPurchasing, feedback.PurchasingSummary, feedback.MentionsHomeless, feedback.OpinionOfHomeless, feedback.HomelessSummary, feedback.MentionsAccessibility, feedback.OpinionOfAccessibility, feedback.AccessibilitySummary, feedback.MentionsSafety, feedback.OpinionOfSafety, feedback.SafetySummary, feedback.MentionsCustomerService, feedback.OpinionOfCustomerService, feedback.CustomerServiceSummary, feedback.MentionsTime, feedback.OpinionOfTime, feedback.TimeSummary, feedback.MentionsSignage, feedback.OpinionOfSignage, feedback.SignageSummary, feedback.MentionsCleanliness, feedback.OpinionOfCleanliness, feedback.CleanlinessSummary)
 
 	if err != nil {
-		return Review{}, fmt.Errorf("[DB] executing statement: %s", err)
+		return fmt.Errorf("[DB] executing statement: %s", err)
 	}
-
-	id, err := res.LastInsertId()
-
+	err = tx.Commit()
 	if err != nil {
-		return Review{}, fmt.Errorf("[DB] last returned id: %s", err)
+		return fmt.Errorf("[DB] committing transcation: %s", err)
 	}
 
-	return Review{
-		Id:      int(id),
-		Content: content,
-	}, nil
+	return nil
 }
 
 type Feedback struct {
@@ -101,18 +96,27 @@ type Feedback struct {
 	CleanlinessSummary   string `json:"cleanlinessSummary"`
 }
 
-func GetReviews(ctx context.Context, db *sql.DB) ([]Review, error) {
-	sqlStmt := "select id, content from reviews"
+type OverallRating struct {
+	Average          int
+	Positive         int
+	SlightlyPositive int
+	Mixed            int
+	SlightlyNegative int
+	Negative         int
+}
+
+func GetOverallRating(ctx context.Context, db *sql.DB) (OverallRating, error) {
+	sqlStmt := "select OverallOpinion, count(*) from feedback group by OverallOpinion"
 
 	tx, err := db.Begin()
 	if err != nil {
-		return []Review{}, fmt.Errorf("[DB] beginning transaction: %s", err)
+		return OverallRating{}, fmt.Errorf("[DB] beginning transaction: %s", err)
 	}
 
 	stmt, err := tx.Prepare(sqlStmt)
 
 	if err != nil {
-		return []Review{}, fmt.Errorf("[DB] preparing statement: %s", err)
+		return OverallRating{}, fmt.Errorf("[DB] preparing statement: %s", err)
 	}
 
 	defer stmt.Close()
@@ -120,25 +124,40 @@ func GetReviews(ctx context.Context, db *sql.DB) ([]Review, error) {
 	res, err := stmt.QueryContext(ctx)
 
 	if err != nil {
-		return []Review{}, fmt.Errorf("[DB] executing statement: %s", err)
+		return OverallRating{}, fmt.Errorf("[DB] executing statement: %s", err)
 	}
 
-	reviews := []Review{}
+	overallRating := OverallRating{}
 
 	for res.Next() {
-		var content string
-		var id int64
-		err = res.Scan(&id, &content)
+		var opinion string
+		var count int
+		err = res.Scan(&opinion, &count)
 
 		if err != nil {
-			return []Review{}, fmt.Errorf("[DB] scanning thread")
+			return OverallRating{}, fmt.Errorf("[DB] scanning thread")
 		}
 
-		reviews = append(reviews, Review{
-			Id:      int(id),
-			Content: content,
-		})
-	}
+		switch opinion {
+		case "Positive":
+			overallRating.Positive = count
+			overallRating.Average += 5
+		case "Slightly Positive":
+			overallRating.SlightlyPositive = count
+			overallRating.Average += 4
+		case "Mixed":
+			overallRating.Mixed = count
+			overallRating.Average += 3
+		case "Slightly Negative":
+			overallRating.SlightlyNegative = count
+			overallRating.Average += 2
+		case "Negative":
+			overallRating.Negative = count
+			overallRating.Average += 1
+		}
 
-	return reviews, nil
+	}
+	overallRating.Average = overallRating.Average / 5
+
+	return overallRating, nil
 }
