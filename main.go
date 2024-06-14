@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 
 	"patrick.com/render-atl-hackathon/db"
 )
@@ -57,5 +59,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	log.Fatal(http.ListenAndServe(":4040", nil))
+	port := "80"
+	if os.Getenv("HACKATHON_PORT") != "" {
+		port = os.Getenv("HACKATHON_PORT")
+	}
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

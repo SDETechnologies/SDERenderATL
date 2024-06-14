@@ -1,2 +1,5 @@
 .env
 db.db*
+build/
+build
+build.zip
