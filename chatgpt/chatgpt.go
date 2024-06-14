@@ -8,6 +8,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
+	"patrick.com/render-atl-hackathon/db"
 )
 
 func GetClient() *openai.Client {
@@ -24,7 +25,7 @@ type RequestBody struct {
 	MaxToken       int               `json:"max_token"`
 }
 
-func SummarizeReview(ctx context.Context, review string) (Feedback, error) {
+func SummarizeReview(ctx context.Context, review string) (db.Feedback, error) {
 	godotenv.Load(".env")
 	apiKey := os.Getenv("OPEN_API_TOKEN")
 	client := resty.New()
@@ -52,7 +53,7 @@ func SummarizeReview(ctx context.Context, review string) (Feedback, error) {
 		panic(err)
 	}
 
-	feedback := Feedback{}
+	feedback := db.Feedback{}
 
 	err = json.Unmarshal([]byte(chatGPTResponse.Choices[0].Message.Content), &feedback)
 

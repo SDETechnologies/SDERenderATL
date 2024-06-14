@@ -60,6 +60,46 @@ func InsertReview(ctx context.Context, db *sql.DB, content string) (Review, erro
 	}, nil
 }
 
+type Feedback struct {
+	Review          string
+	OverallOpinion  string `json:"overallOpinion"`
+	MentionsDrivers bool   `json:"mentionsDrivers"`
+	OpinionOfDriver string `json:"opinionOfDriver"`
+	DriversSummary  string `json:"driversSummary"`
+
+	MentionsPurchasing  bool   `json:"mentionsPurchasing"`
+	OpinionOfPurchasing string `json:"opinionOfPurchasing"`
+	PurchasingSummary   string `json:"purchasingSummary"`
+
+	MentionsHomeless  bool   `json:"mentionsHomeless"`
+	OpinionOfHomeless string `json:"opinionOfHomeless"`
+	HomelessSummary   string `json:"homelessSummary"`
+
+	MentionsAccessibility  bool   `json:"mentionsAccessibility"`
+	OpinionOfAccessibility string `json:"opinionOfAccessibility"`
+	AccessibilitySummary   string `json:"accessibilitySummary"`
+
+	MentionsSafety  bool   `json:"mentionsSafety"`
+	OpinionOfSafety string `json:"opinionOfSafety"`
+	SafetySummary   string `json:"safetySummary"`
+
+	MentionsCustomerService  bool   `json:"mentionsCustomerService"`
+	OpinionOfCustomerService string `json:"opinionOfCustomerService"`
+	CustomerServiceSummary   string `json:"customerServiceSummary"`
+
+	MentionsTime  bool   `json:"mentionsTime"`
+	OpinionOfTime string `json:"opinionOfTime"`
+	TimeSummary   string `json:"timeSummary"`
+
+	MentionsSignage  bool   `json:"mentionsSignage"`
+	OpinionOfSignage string `json:"opinionOfSignage"`
+	SignageSummary   string `json:"signageSummary"`
+
+	MentionsCleanliness  bool   `json:"mentionsCleanliness"`
+	OpinionOfCleanliness string `json:"opinionOfCleanliness"`
+	CleanlinessSummary   string `json:"cleanlinessSummary"`
+}
+
 func GetReviews(ctx context.Context, db *sql.DB) ([]Review, error) {
 	sqlStmt := "select id, content from reviews"
 

@@ -3,38 +3,8 @@ package chatgpt
 const (
 	apiEndpoint    = "https://api.openai.com/v1/chat/completions"
 	inititalPrompt = "You are summarising reviews people left of a mass transport system"
-	directions     = `From the review of the transportation system in the previous message for each of the 9 following topics seperated by commas, (Parentheses provide more context and are not their own topic) and provide answers to 3 questions for the previous review. Do they mention the topic? do they view the topic positively, negatively, or mixed (The value for those fields should only be 'Positive', 'Negative', or 'Mixed')? Summarize the topic in 10 words or less. Only fill out questions you are confident in. If you do not have a confident answer leave the mentions field false and opinions field and summary field as empty stringsl. Drivers (drivers of either trains, buse or Trams, streetcars), Purchasing (Buying tickets, etc), Homeless (Panhandlers),Accessibility for Disabled People, Personal safey (How safe do people feel), Customer Service (Can people find help), Time (Scheduling, are things on time, Reliability), Signage (How clear are the times), Cleanliness. Provide a JSON response in this format replace 'boolean' with true/false and 'text' with the answer: {\"mentionsDrivers\": \"boolean\", \"opinionOfDriver\": \"text\", \"driversSummary\": \"text\", \"mentionsPurchasing\": \"boolean\", \"opinionOfPurchasing\": \"text\", \"purchasingSummary\": \"text\", \"mentionsHomeless\": \"boolean\", \"opinionOfHomeless\": \"text\", \"homelessSummary\": \"text\", \"mentionsAccessibility\": \"boolean\", \"opinionOfAccessibility\": \"text\", \"accessibilitySummary\": \"text\", \"mentionsSafety\": \"boolean\", \"opinionOfSafety\": \"text\", \"safetySummary\": \"text\", \"mentionsCustomerService\": \"boolean\", \"opinionOfCustomerService\": \"text\", \"customerServiceSummary\": \"text\", \"mentionsTime\": \"boolean\", \"opinionOfTime\": \"text\", \"timeSummary\": \"text\", \"mentionsSignage\": \"boolean\", \"opinionOfSignage\": \"text\", \"signageSummary\": \"text\", \"mentionsCleanliness\": \"boolean\", \"opinionOfCleanliness\": \"text\", \"cleanlinessSummary\": \"text\"}`
+	directions     = `The first field "overallOpinion" should be general view the reviewer has. It can only have 5 values (Positive, Slightly Positive, Mixed, Slightly Negative, Negative). For each of the 9 following topics seperated by commas, (Parentheses provide more context and are not their own topic) and provide answers to 3 questions for the previous review. Do they mention the topic? do they view the topic positively, negatively, or mixed (The value for those fields should only be 'Positive', 'Negative', or 'Mixed')? Summarize the topic in 10 words or less. Only fill out questions you are confident in. If you do not have a confident answer leave the mentions field false and opinions field and summary field as empty stringsl. Drivers (drivers of either trains, buse or Trams, streetcars), Purchasing (Buying tickets, etc), Homeless (Panhandlers),Accessibility for Disabled People, Personal safey (How safe do people feel), Customer Service (Can people find help), Time (Scheduling, are things on time, Reliability), Signage (How clear are the times), Cleanliness. Provide a JSON response in this format replace 'boolean' with true/false and 'text' with the answer: {\"overallOpinion\": \"text\", \"mentionsDrivers\": \"boolean\", \"opinionOfDriver\": \"text\", \"driversSummary\": \"text\", \"mentionsPurchasing\": \"boolean\", \"opinionOfPurchasing\": \"text\", \"purchasingSummary\": \"text\", \"mentionsHomeless\": \"boolean\", \"opinionOfHomeless\": \"text\", \"homelessSummary\": \"text\", \"mentionsAccessibility\": \"boolean\", \"opinionOfAccessibility\": \"text\", \"accessibilitySummary\": \"text\", \"mentionsSafety\": \"boolean\", \"opinionOfSafety\": \"text\", \"safetySummary\": \"text\", \"mentionsCustomerService\": \"boolean\", \"opinionOfCustomerService\": \"text\", \"customerServiceSummary\": \"text\", \"mentionsTime\": \"boolean\", \"opinionOfTime\": \"text\", \"timeSummary\": \"text\", \"mentionsSignage\": \"boolean\", \"opinionOfSignage\": \"text\", \"signageSummary\": \"text\", \"mentionsCleanliness\": \"boolean\", \"opinionOfCleanliness\": \"text\", \"cleanlinessSummary\": \"text\"}`
 )
-
-type Feedback struct {
-	MentionsDrivers          bool   `json:"mentionsDrivers"`
-	OpinionOfDriver          string `json:"opinionOfDriver"`
-	DriversSummary           string `json:"driversSummary"`
-	MentionsPurchasing       bool   `json:"mentionsPurchasing"`
-	OpinionOfPurchasing      string `json:"opinionOfPurchasing"`
-	PurchasingSummary        string `json:"purchasingSummary"`
-	MentionsHomeless         bool   `json:"mentionsHomeless"`
-	OpinionOfHomeless        string `json:"opinionOfHomeless"`
-	HomelessSummary          string `json:"homelessSummary"`
-	MentionsAccessibility    bool   `json:"mentionsAccessibility"`
-	OpinionOfAccessibility   string `json:"opinionOfAccessibility"`
-	AccessibilitySummary     string `json:"accessibilitySummary"`
-	MentionsSafety           bool   `json:"mentionsSafety"`
-	OpinionOfSafety          string `json:"opinionOfSafety"`
-	SafetySummary            string `json:"safetySummary"`
-	MentionsCustomerService  bool   `json:"mentionsCustomerService"`
-	OpinionOfCustomerService string `json:"opinionOfCustomerService"`
-	CustomerServiceSummary   string `json:"customerServiceSummary"`
-	MentionsTime             bool   `json:"mentionsTime"`
-	OpinionOfTime            string `json:"opinionOfTime"`
-	TimeSummary              string `json:"timeSummary"`
-	MentionsSignage          bool   `json:"mentionsSignage"`
-	OpinionOfSignage         string `json:"opinionOfSignage"`
-	SignageSummary           string `json:"signageSummary"`
-	MentionsCleanliness      bool   `json:"mentionsCleanliness"`
-	OpinionOfCleanliness     string `json:"opinionOfCleanliness"`
-	CleanlinessSummary       string `json:"cleanlinessSummary"`
-}
 
 type ChatGPTResponse struct {
 	ID      string `json:"id"`
