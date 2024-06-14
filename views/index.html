@@ -116,7 +116,7 @@ const negative = "#D32F2F"; // dark red fitting the scheme
     new Chart(mentionedTopicsPieChart, {
         type: 'doughnut',
         data: {
-            labels: ['Drivers', 'Purchasing', 'Homeless', 'Accessibility', 'Saftey', 'Customer Service', 'Mentions', 'Signage', 'Cleanliness'],
+            labels: ['Drivers', 'Purchasing', 'Homeless', 'Accessibility', 'Saftey', 'Customer Service', 'Time', 'Signage', 'Cleanliness'],
             datasets: [{
                 label: 'Mentioned Topics',
                 data: [{{.TopicCounts.MentionsDriversCount}}, {{.TopicCounts.MentionsPurchasingCount}}, {{.TopicCounts.MentionsHomelessCount}}, {{.TopicCounts.MentionsAccessibilityCount}}, {{.TopicCounts.MentionsSafetyCount}}, {{.TopicCounts.MentionsCustomerServiceCount}}, {{.TopicCounts.MentionsTimeCount}}, {{.TopicCounts.MentionsSignageCount}}, {{.TopicCounts.MentionsCleanlinessCount}} 
