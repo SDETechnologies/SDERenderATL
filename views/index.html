@@ -10,23 +10,102 @@
 </head>
 
 <body>
-    <div class="title">MARTA Reviews</div>
+    <div class="header">
+        <div class="title">MARTA Reviews</div>
+        <img src="/static/marta_logo.png" />
+    </div>
     <div class="title-divider" />
     <div class="title-cards">
-        <div>Number Of Monthly MARTA Riders 500,000</div>
-        <div>Total Number of Reviews Collected 10,000</div>
-        <div>Most Popular Issue: Drivers</div>
+        <div class="card">
+            <div class="card-heading">Number Of Monthly MARTA Riders:</div>
+            <div class="card-emphasized-content">500,000</div>
+        </div>
+        <div class="card">
+            <div class="card-heading">Total Number of Reviews Collected:</div>
+            <div class="card-emphasized-content">10,000</div>
+        </div>
+        <div class="card">
+            <div class="card-heading">Most Popular Issue:</div>
+            <div class="card-emphasized-content">Drivers</div>
+        </div>
     </div>
     <div class="middle-cards">
+        <div></div>
+        <div class="card">
+            <div class="card-heading">Overall Rating</div>
+            <div class="five-star-rating">{{- range $star := .OverallStats.Stars }}<img {{ if eq $star "Full"
+                    }}src="static/star-filled.svg" {{else if eq $star "HalfFull" }} src="static/star-partial.svg" {{
+                    else }} src="static/star-empty.svg" {{ end }} />
+                {{end}}
+            </div>
+            <div class="card-heading">Reviews by star</div>
+            <div class="reviews-by-star">
+                <div>
+                    <img src="static/star-partial.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    {{ .OverallStats.Negative }}
+                </div>
+                <div>
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-partial.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    {{ .OverallStats.SlightlyNegative }}
+                </div>
+                <div>
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-partial.svg" />
+                    <img src="static/star-empty.svg" />
+                    <img src="static/star-empty.svg" />
+                    {{ .OverallStats.Mixed }}
+                </div>
+                <div>
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-partial.svg" />
+                    <img src="static/star-empty.svg" />
+                    {{ .OverallStats.SlightlyPositive }}
+                </div>
+                <div>
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-filled.svg" />
+                    <img src="static/star-partial.svg" />
+                    {{ .OverallStats.Positive }}
+                </div>
+            </div>
+
+        </div>
     </div>
 </body>
 
 <style>
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 3rem;
+    }
+
+    .header img {
+        height: 3rem;
+    }
+
     body {
         font-family: "Inter", sans-serif;
         padding: 1rem;
     }
-
 
     .title-divider {
         background-color: blue;
@@ -36,26 +115,65 @@
         border: 100%;
     }
 
-    .title {
-        font-weight: bold;
-        font-size: 2rem;
-    }
-
     .title-cards {
         display: flex;
         flex-direction: row;
         gap: 1rem;
         padding: 2rem 0;
-        height: 10rem;
+        height: 8rem;
     }
 
-    .title-cards div {
+    .middle-cards {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
         border-radius: .5rem;
         background-color: #F8F0F8;
         padding: 1rem;
         width: 100%;
+        min-height: 4rem;
+    }
 
+    .card-heading {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    .card-emphasized-content {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .five-star-rating {
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+
+    }
+
+    .full-star {
+        fill: #FFB800
+    }
+
+    .partial-star {
+        fill: #FFB80040;
+
+    }
+
+    .empty-star {
+        fill: #D9D9D9;
+    }
+
+    .reviews-by-star {
+        height: 2rem;
     }
 </style>
 

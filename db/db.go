@@ -103,6 +103,7 @@ type OverallRating struct {
 	Mixed            int
 	SlightlyNegative int
 	Negative         int
+	Stars            []string
 }
 
 func GetOverallRating(ctx context.Context, db *sql.DB) (OverallRating, error) {
@@ -127,7 +128,9 @@ func GetOverallRating(ctx context.Context, db *sql.DB) (OverallRating, error) {
 		return OverallRating{}, fmt.Errorf("[DB] executing statement: %s", err)
 	}
 
-	overallRating := OverallRating{}
+	overallRating := OverallRating{
+		Stars: []string{},
+	}
 
 	for res.Next() {
 		var opinion string
@@ -158,6 +161,16 @@ func GetOverallRating(ctx context.Context, db *sql.DB) (OverallRating, error) {
 
 	}
 	overallRating.Average = overallRating.Average / 5
+
+	for i := 0; i < 5; i++ {
+		if i < overallRating.Average {
+			overallRating.Stars = append(overallRating.Stars, "Full")
+		} else if i == overallRating.Average {
+			overallRating.Stars = append(overallRating.Stars, "HalfFull")
+		} else {
+			overallRating.Stars = append(overallRating.Stars, "Empty")
+		}
+	}
 
 	return overallRating, nil
 }
