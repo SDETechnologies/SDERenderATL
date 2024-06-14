@@ -92,6 +92,129 @@
     </div>
     </div>
 </body>
+<style>
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 3rem;
+    }
+
+    .header img {
+        height: 3rem;
+    }
+
+    body {
+        font-family: "Inter", sans-serif;
+        margin: 1rem;
+    }
+
+    .title-divider {
+        background-color: #0072CE;
+        width: full;
+        height: .2rem;
+        border-radius: .5rem;
+        border: 100%;
+    }
+
+    .title-cards {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 2rem 0;
+        height: 8rem;
+    }
+
+    .middle-cards {
+        display: flex;
+        flex-direction: row;
+        padding: 2rem 0;
+        gap: 1rem;
+    }
+
+    .rating-card {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
+        border-radius: .5rem;
+        background-color: #F8F0F8;
+        padding: 1rem;
+        width: 35rem;
+        min-height: 7rem;
+    }
+    .bottom-bar-chart {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
+        border-radius: .5rem;
+        background-color: #F8F0F8;
+        padding: 1rem;
+        min-height: 7rem;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
+        border-radius: .5rem;
+        background-color: #F8F0F8;
+        padding: 1rem;
+        width: 100%;
+        min-height: 7rem;
+    }
+
+    .card-heading {
+        font-size: 1.2rem;
+        padding-bottom: .5rem;
+        font-weight: 500;
+    }
+
+    .card-emphasized-content {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .five-star-rating {
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        padding-bottom: 2rem;
+
+    }
+
+    .full-star {
+        fill: #FFB800
+    }
+
+    .partial-star {
+        fill: #FFB80040;
+
+    }
+
+    .empty-star {
+        fill: #D9D9D9;
+    }
+
+    .reviews-by-star div {
+        display: flex;
+        flex-direction: row;
+        justify-items: start;
+        font-size: 1.1rem;
+        padding: .2rem .5rem
+    }
+
+    #pie-chart {
+        height: 450px !important;
+        width: 100% !important;
+    }
+</style>
+
 <script>
 
 const primaryBlue = "#0072CE";
@@ -221,128 +344,4 @@ const negative = "#D32F2F"; // dark red fitting the scheme
     })
 
 </script>
-
-<style>
-    .header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .title {
-        font-weight: bold;
-        font-size: 3rem;
-    }
-
-    .header img {
-        height: 3rem;
-    }
-
-    body {
-        font-family: "Inter", sans-serif;
-        margin: 1rem;
-    }
-
-    .title-divider {
-        background-color: #0072CE;
-        width: full;
-        height: .2rem;
-        border-radius: .5rem;
-        border: 100%;
-    }
-
-    .title-cards {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        padding: 2rem 0;
-        height: 8rem;
-    }
-
-    .middle-cards {
-        display: flex;
-        flex-direction: row;
-        padding: 2rem 0;
-        gap: 1rem;
-    }
-
-    .rating-card {
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
-        border-radius: .5rem;
-        background-color: #F8F0F8;
-        padding: 1rem;
-        width: 35rem;
-        min-height: 7rem;
-    }
-    .bottom-bar-chart {
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
-        border-radius: .5rem;
-        background-color: #F8F0F8;
-        padding: 1rem;
-        min-height: 7rem;
-    }
-
-    .card {
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.05);
-        border-radius: .5rem;
-        background-color: #F8F0F8;
-        padding: 1rem;
-        width: 100%;
-        min-height: 7rem;
-    }
-
-    .card-heading {
-        font-size: 1.2rem;
-        padding-bottom: .5rem;
-        font-weight: 500;
-    }
-
-    .card-emphasized-content {
-        font-size: 2rem;
-        font-weight: 600;
-    }
-
-    .five-star-rating {
-        svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        padding-bottom: 2rem;
-
-    }
-
-    .full-star {
-        fill: #FFB800
-    }
-
-    .partial-star {
-        fill: #FFB80040;
-
-    }
-
-    .empty-star {
-        fill: #D9D9D9;
-    }
-
-    .reviews-by-star div {
-        display: flex;
-        flex-direction: row;
-        justify-items: start;
-        font-size: 1.1rem;
-        padding: .2rem .5rem
-    }
-
-    #pie-chart {
-        height: 450px !important;
-        width: 100% !important;
-    }
-</style>
-
 </html>
