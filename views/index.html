@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="middle-cards">
-        <div clas="card" id="mentioned-topics-piechart"></div>
+        <div class="card" id="mentioned-topics-piechart"></div>
         <div class="card">
             <div class="card-heading">Overall Rating</div>
             <div class="five-star-rating">{{- range $star := .OverallStats.Stars }}<img {{ if eq $star "Full"
@@ -46,7 +46,7 @@
                     <img src="static/star-empty.svg" />
                     <img src="static/star-empty.svg" />
                     <img src="static/star-empty.svg" />
-                    {{ .OverallStats.Negative }}
+                    <div>{{ .OverallStats.Negative }}</div>
                 </div>
                 <div>
                     <img src="static/star-filled.svg" />
@@ -54,7 +54,7 @@
                     <img src="static/star-empty.svg" />
                     <img src="static/star-empty.svg" />
                     <img src="static/star-empty.svg" />
-                    {{ .OverallStats.SlightlyNegative }}
+                    <div>{{ .OverallStats.SlightlyNegative }}</div>
                 </div>
                 <div>
                     <img src="static/star-filled.svg" />
@@ -62,7 +62,7 @@
                     <img src="static/star-partial.svg" />
                     <img src="static/star-empty.svg" />
                     <img src="static/star-empty.svg" />
-                    {{ .OverallStats.Mixed }}
+                    <div>{{ .OverallStats.Mixed }}</div>
                 </div>
                 <div>
                     <img src="static/star-filled.svg" />
@@ -70,7 +70,7 @@
                     <img src="static/star-filled.svg" />
                     <img src="static/star-partial.svg" />
                     <img src="static/star-empty.svg" />
-                    {{ .OverallStats.SlightlyPositive }}
+                    <div>{{ .OverallStats.SlightlyPositive }}</div>
                 </div>
                 <div>
                     <img src="static/star-filled.svg" />
@@ -78,11 +78,11 @@
                     <img src="static/star-filled.svg" />
                     <img src="static/star-filled.svg" />
                     <img src="static/star-partial.svg" />
-                    {{ .OverallStats.Positive }}
+                    <div>{{ .OverallStats.Positive }}</div>
                 </div>
             </div>
-
         </div>
+    </div>
     </div>
 </body>
 <script>
@@ -129,6 +129,8 @@
     .middle-cards {
         display: flex;
         flex-direction: row;
+        padding: 2rem 0;
+        gap: 1rem;
     }
 
     .card {
@@ -140,11 +142,12 @@
         background-color: #F8F0F8;
         padding: 1rem;
         width: 100%;
-        min-height: 4rem;
+        min-height: 7rem;
     }
 
     .card-heading {
         font-size: 1.2rem;
+        padding-bottom: .5rem;
         font-weight: 500;
     }
 
@@ -154,11 +157,12 @@
     }
 
     .five-star-rating {
-
         svg {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
         }
+
+        padding-bottom: 2rem;
 
     }
 
@@ -175,8 +179,12 @@
         fill: #D9D9D9;
     }
 
-    .reviews-by-star {
-        height: 2rem;
+    .reviews-by-star div {
+        display: flex;
+        flex-direction: row;
+        justify-items: start;
+        font-size: 1.1rem;
+        padding: .2rem .5rem
     }
 </style>
 
